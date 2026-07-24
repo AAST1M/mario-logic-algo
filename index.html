@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mario Logic & Algo | Interactive Digital Logic & Circuit Suite</title>
+  <meta name="description" content="Mario Logic & Algo is a professional interactive web-based digital logic & algorithm simulator. Build logic circuits, evaluate truth tables, solve Karnaugh Maps, parse boolean expressions, and analyze timing waveforms." />
+  
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/src/style.css" />
+</head>
+<body>
+  <div id="app">
+    <!-- TOP HEADER NAVBAR -->
+    <header class="navbar">
+      <div class="nav-brand">
+        <button id="btn-toggle-sidebar" class="btn btn-icon btn-sm" title="Toggle Sidebar Palette">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
+        </button>
+        <div class="logo-icon">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M4 19V5l8 7 8-7v14" />
+          </svg>
+        </div>
+        <span class="logo-text">MARIO <span class="logo-highlight">LOGIC & ALGO</span> <span class="logo-badge">PRO</span></span>
+      </div>
+
+      <!-- NAVBAR CONTROLS -->
+      <div class="nav-controls">
+        <div class="button-group">
+          <button id="btn-undo" class="btn btn-icon" title="Undo (Ctrl+Z)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg>
+          </button>
+          <button id="btn-redo" class="btn btn-icon" title="Redo (Ctrl+Y)">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 7v6h-6"/><path d="M3 17a9 9 0 0 1 9-9 9 9 0 0 1 6 2.3l3 2.7"/></svg>
+          </button>
+          <button id="btn-clear" class="btn btn-secondary" title="Clear Canvas">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/></svg>
+            Clear
+          </button>
+        </div>
+
+        <div class="nav-divider"></div>
+
+        <div class="button-group">
+          <button id="btn-snap" class="btn btn-toggle active" title="Toggle Grid Snapping">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18M15 3v18"/></svg>
+            Snap Grid
+          </button>
+          <button id="btn-zoom-out" class="btn btn-icon" title="Zoom Out"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+          <span id="zoom-level" class="zoom-indicator">100%</span>
+          <button id="btn-zoom-in" class="btn btn-icon" title="Zoom In"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg></button>
+          <button id="btn-zoom-reset" class="btn btn-secondary" title="Reset Zoom">Fit</button>
+        </div>
+
+        <div class="nav-divider"></div>
+
+        <!-- SIMULATION CONTROLS -->
+        <div class="simulation-controls">
+          <button id="btn-play-pause" class="btn btn-primary" title="Pause/Play Simulation">
+            <svg id="sim-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="6" y="4" width="4" height="16"/><rect x="14" y="4" width="4" height="16"/></svg>
+            <span id="sim-status-text">Simulating</span>
+          </button>
+        </div>
+
+        <div class="nav-divider"></div>
+
+        <!-- PRESETS DROPDOWN -->
+        <select id="preset-select" class="select-input" aria-label="Load Circuit Preset" title="Load Circuit Preset">
+          <option value="" disabled selected>📂 Load Circuit Preset...</option>
+        </select>
+
+        <!-- EXPORT / IMPORT BUTTONS -->
+        <div class="button-group">
+          <button id="btn-export-json" class="btn btn-secondary" title="Export Circuit JSON">Export</button>
+          <button id="btn-import-json" class="btn btn-secondary" title="Import Circuit JSON">Import</button>
+          <button id="btn-screenshot" class="btn btn-secondary" title="Save PNG Screenshot">PNG</button>
+          <button id="btn-export-pdf" class="btn btn-secondary" title="Print / Export PDF Sheet">PDF</button>
+          <button id="btn-help" class="btn btn-icon" title="Keyboard Shortcuts & Tutorial">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- MAIN CONTENT LAYOUT -->
+    <div class="main-layout">
+      <!-- LEFT SIDEBAR: COMPONENT PALETTE -->
+      <aside class="sidebar">
+        <div class="sidebar-header">
+          <h3>Component Library</h3>
+          <input type="text" id="search-components" placeholder="Search gates..." class="search-input" aria-label="Search components" title="Search components" />
+        </div>
+
+        <div class="palette-categories" id="palette-categories">
+          <!-- Dynamically populated from Components.js -->
+        </div>
+      </aside>
+
+      <!-- CENTER WORKSPACE: CANVAS -->
+      <main class="workspace">
+        <canvas id="circuit-canvas"></canvas>
+
+        <!-- FLOATING OVERLAY INFO -->
+        <div class="canvas-overlay top-left">
+          <div class="overlay-badge">
+            <span class="pulse-dot"></span>
+            <span>Live Engine</span>
+          </div>
+        </div>
+
+        <div class="canvas-overlay top-right">
+          <button id="btn-delete-selected" class="btn btn-danger btn-sm hidden">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>
+            Delete Selected (<span id="selected-count">0</span>)
+          </button>
+        </div>
+      </main>
+    </div>
+
+    <!-- BOTTOM DRAWER PANEL FOR TOOLS -->
+    <section class="bottom-drawer" id="bottom-drawer">
+      <!-- DRAWER TABS -->
+      <div class="drawer-header">
+        <div class="drawer-tabs">
+          <button class="tab-btn active" data-tab="truth-table">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M3 15h18M9 3v18"/></svg>
+            Truth Table
+          </button>
+          <button class="tab-btn" data-tab="kmap">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 12h18M12 3v18"/></svg>
+            K-Map Solver
+          </button>
+          <button class="tab-btn" data-tab="boolean">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7V4h16v3"/><path d="M9 20h6"/><path d="M12 4v16"/></svg>
+            Boolean Parser
+          </button>
+          <button class="tab-btn" data-tab="timing">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 12h-4l-3 9L9 3l-3 9H2"/></svg>
+            Timing Waveform
+          </button>
+        </div>
+
+        <button id="btn-toggle-drawer" class="btn btn-icon btn-sm" title="Minimize Drawer">
+          <svg id="drawer-arrow" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+        </button>
+      </div>
+
+      <!-- DRAWER CONTENTS -->
+      <div class="drawer-content" id="drawer-content">
+        <!-- 1. TRUTH TABLE PANEL -->
+        <div class="tab-panel active" id="tab-truth-table">
+          <div class="panel-toolbar">
+            <button id="btn-generate-table" class="btn btn-primary btn-sm">
+              ⚡ Evaluate Circuit Truth Table
+            </button>
+            <button id="btn-export-csv" class="btn btn-secondary btn-sm">Export CSV</button>
+          </div>
+          <div id="truth-table-container" class="table-scroll-view">
+            <p class="placeholder-text">Click "Evaluate Circuit Truth Table" to calculate truth table matrix for active inputs & outputs.</p>
+          </div>
+        </div>
+
+        <!-- 2. K-MAP PANEL -->
+        <div class="tab-panel" id="tab-kmap">
+          <div class="panel-toolbar">
+            <label class="input-label" for="kmap-vars-select">Variables:</label>
+            <select id="kmap-vars-select" class="select-input select-sm" aria-label="Select K-Map variables" title="Select K-Map variables">
+              <option value="2">2 Variables (A, B)</option>
+              <option value="3">3 Variables (A, B, C)</option>
+              <option value="4" selected>4 Variables (A, B, C, D)</option>
+            </select>
+
+            <button id="btn-kmap-build" class="btn btn-primary btn-sm">
+              ⚡ Build Circuit from K-Map
+            </button>
+          </div>
+
+          <div class="kmap-flex-container">
+            <div id="kmap-grid-wrapper" class="kmap-grid-view"></div>
+            <div class="kmap-results-card">
+              <h4>Minimized Boolean SOP Expression</h4>
+              <div id="kmap-sop-output" class="equation-box">F = 0</div>
+              <p class="help-hint">Click cells in the grid to toggle values (0 → 1 → X Don't Care).</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. BOOLEAN PARSER PANEL -->
+        <div class="tab-panel" id="tab-boolean">
+          <div class="boolean-input-row">
+            <input type="text" id="boolean-input" class="text-input" placeholder="e.g. (A AND B) OR NOT C  or  A'B + C" value="(A AND B) OR NOT C" aria-label="Boolean algebra expression" title="Boolean algebra expression" />
+            <button id="btn-parse-boolean" class="btn btn-primary">⚡ Parse & Build Circuit</button>
+          </div>
+          <div id="boolean-status" class="status-msg"></div>
+        </div>
+
+        <!-- 4. TIMING DIAGRAM PANEL -->
+        <div class="tab-panel" id="tab-timing">
+          <div class="timing-canvas-wrapper">
+            <canvas id="timing-canvas" height="160"></canvas>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- HELP & SHORTCUTS MODAL -->
+  <dialog id="help-modal" class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2>Mario Logic & Algo Guide</h2>
+        <button id="btn-close-modal" class="btn btn-icon btn-sm"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg></button>
+      </div>
+      <div class="modal-body">
+        <h3>Keyboard Shortcuts</h3>
+        <table class="shortcuts-table">
+          <tr><td><kbd>Space</kbd> + Drag</td><td>Pan Canvas Workspace</td></tr>
+          <tr><td>Mouse Wheel</td><td>Zoom In / Zoom Out</td></tr>
+          <tr><td><kbd>Delete</kbd> / <kbd>Backspace</kbd></td><td>Delete Selected Components</td></tr>
+          <tr><td><kbd>Ctrl</kbd> + <kbd>Z</kbd></td><td>Undo Last Action</td></tr>
+          <tr><td><kbd>Ctrl</kbd> + <kbd>Y</kbd></td><td>Redo Action</td></tr>
+          <tr><td><kbd>Shift</kbd> + Click</td><td>Multi-select Components</td></tr>
+        </table>
+      </div>
+    </div>
+  </dialog>
+
+  <!-- File Upload Input hidden -->
+  <input type="file" id="file-import-input" accept=".json" class="hidden" aria-label="Import JSON file" title="Import JSON file" />
+
+  <script type="module" src="/src/main.js"></script>
+</body>
+</html>
